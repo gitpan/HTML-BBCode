@@ -27,6 +27,8 @@ The following methods can be used
       html_tags    => \%html_tags, 
       match        => \%match, 
       substitute   => \%substitute,
+      no_html	   => 1,
+      linebreaks   => 1,
    });
 
 C<new> creates a new C<HTML::BBCode> object using the configuration
@@ -56,6 +58,18 @@ Specifies the regexp needed to catch the BBCode.
 =item substitute
 
 Specifies the substitute command for the C<match> regexp.
+
+=item no_html
+
+Disabled by default.
+
+When true, HTML tags will be converted from '<br />' to '&lt;br /&gt'
+
+=item linebreaks
+
+Disabled by default.
+
+When true, will substitute linebreaks into HTML ('<br />')
 
 =back
 
@@ -93,7 +107,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -162,6 +176,8 @@ sub _init {
                   html_tags    => \%html_tags, 
                   match        => \%match, 
                   substitute   => \%substitute, 
+                  no_html      => 0,
+                  linebreaks   => 0,
                   %{ $args },
                  );
 
@@ -178,7 +194,17 @@ sub parse {
    my %match      = %{ $self->{options}->{match} };
    my %substitute = %{ $self->{options}->{substitute} };
    my %html_tags  = %{ $self->{options}->{html_tags} };
+
+   # "Strip" HTML input
+   if($self->{options}->{no_html}) {
+      $self->{html} =~ s|<|&lt;|gs;
+      $self->{html} =~ s|>|&gt;|gs;
+   }
+
+   # Substitute linebreaks
+   $self->{html} =~ s|\n|<br />\n|gs if($self->{options}->{linebreaks});
   
+   # Substitute the BBCode
    map { 
          if(_is_allowed($self, $_)) {
           $self->{html} =~ s|$match{$_}|$substitute{$_}|eegis

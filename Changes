@@ -1,3 +1,9 @@
+0.04
+  - 'no_html' option, for "stripping" HTML input
+  - 'linebreaks' option, for inserting '<br />' tags
+
+  Thanx to Ken for pointing these 'flaws' out to me :)
+
 0.03
   - Better regexps (they still are dreadfull, but slowly improving ;).
   - Nested tags are handled better.
@@ -6,5 +12,6 @@
     
 0.02
   - Fixed stupid requirement for Perl 5.8.4 ... not needed
+
 0.01
   - initial version; 
