@@ -1,6 +1,6 @@
 #########################
 
-use Test::More tests => 23;
+use Test::More tests => 24;
 BEGIN { use_ok 'HTML::BBCode'; }
 
 #########################
@@ -24,6 +24,7 @@ is($bbc->parse('[url]http://www.b10m.net/[/url]'), '<a href="http://www.b10m.net
 is($bbc->parse('[url=http://www.b10m.net/]lame site[/url]'), '<a href="http://www.b10m.net/">lame site</a>', 'hyperlink (with link-text)');
 is($bbc->parse('[email]foo@bar.com[/email]'), '<a href="mailto:foo@bar.com">foo@bar.com</a>', 'mailto-links');
 is($bbc->parse('[img]foo.png[/img]'), '<img src="foo.png" />', 'image');
+is($bbc->parse('[url=http://b10m.net][img]/b10m/logo.png.noway[/img][/url]'), '<a href="http://b10m.net"><img src="/b10m/logo.png.noway" /></a>', 'linked image');
 is($bbc->parse('[list][*]foo[*]bar[/list]'), '<ul><li> foo </li><li> bar</li></ul>', 'unordered list');
 is($bbc->parse('[list=1][*]foo[*]bar[/list]'), '<ol><li> foo </li><li> bar</li></ol>', 'ordered list');
 is($bbc->parse('[list=a][*]foo[*]bar[/list]'), '<ol style="list-style-type: lower-alpha;"><li> foo </li><li> bar</li></ol>', 'ordered list (alpha style)');

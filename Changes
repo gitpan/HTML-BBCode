@@ -1,3 +1,7 @@
+1.01
+  - Nesting problem patched by monk physi. Thanks!
+  - img nesting problem fixed. Linked images should be ok now.
+
 1.00
   - This module has basically been built from scratch again, for a lot
     of problems were spotted by various users (THANKS ALL!). The module now

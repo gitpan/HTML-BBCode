@@ -101,7 +101,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -200,7 +200,7 @@ sub parse {
 sub _open_tag {
    my ($self, $open) = @_;
    my ($tag) = $open =~ m/\[([^=\]]+).*?\]/s;	# Don't do this! ARGH!
-   if(_dont_nest($self, $tag)) {
+   if(_dont_nest($self, $tag) && $tag eq 'img') {
       $self->{_skip_nest} = $tag;
    }
    if($self->{_skip_nest} eq $tag) {
@@ -265,6 +265,7 @@ sub _end_tag {
             }
          }
    }
+   $self->{_nest_count_stack} = 0;
 }
 
 sub _do_BB {
