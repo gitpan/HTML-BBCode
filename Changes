@@ -1,2 +1,4 @@
+0.02
+  - Fixed stupid requirement for Perl 5.8.4 ... not needed
 0.01
   - initial version; 
