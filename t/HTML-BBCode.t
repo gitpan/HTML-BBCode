@@ -1,6 +1,6 @@
 #########################
 
-use Test::Simple tests => 17;
+use Test::Simple tests => 20;
 
 #########################
 
@@ -28,3 +28,13 @@ ok($bbc->parse('[list=a][*]foo[*]bar[/list]') eq '<ol style="list-style-type: lo
 
 # Mix them and do 'em wrong!
 ok($bbc->parse('[b]bold, [i]bold and italic[/i][/b][/b]') eq '<span style="font-weight: bold">bold, <span style="font-style: italic">bold and italic</span></span>[/b]');
+
+# new object, with options
+$bbc2 = HTML::BBCode->new({ allowed_tags => [qw(email quote)] });
+ok(defined($bbc2));
+
+# Nested tags
+ok($bbc2->parse('[quote="[email]b10m@perlmonk.org[/email]"]foo[/quote]') eq '<div class="bbcode_quote_header"><a href="mailto:b10m@perlmonk.org">b10m@perlmonk.org</a> wrote:</div><div class="bbcode_quote_body">foo</div>');
+
+# Nested tags with disallowed tag
+ok($bbc2->parse('[quote="[email]b10m@perlmonk.org[/email]"][b]foo[/b][/quote]') eq '<div class="bbcode_quote_header"><a href="mailto:b10m@perlmonk.org">b10m@perlmonk.org</a> wrote:</div><div class="bbcode_quote_body">[b]foo[/b]</div>');

@@ -71,6 +71,11 @@ a single scalar string.
 http://www.b10m.net/cgi-bin/HTML-BBCode.cgi
 http://www.phpbb.com/phpBB/faq.php?mode=bbcode
 
+=head1 BUGS
+
+C<Bugs? Impossible!>. This module is still experimental. Please
+notify the author when you find bugs.
+
 =head1 AUTHOR
 
 M. Blom, E<lt>b10m@perlmonk.orgE<gt>
@@ -88,7 +93,8 @@ use strict;
 use warnings;
 use Data::Dumper;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
+our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
    my ($class, $args) = @_;
@@ -105,17 +111,16 @@ sub new {
 sub _init {
    my ($self, $args) = @_;
 
-   my @bbcode_tags = qw(b u i color size quote code list url email img);
    my %html_tags   = (
+     code       => '<div class="bbcode_code_header">Code:</div>'.
+                   '<div class="bbcode_code_body">%s</div>',
+     quote      => '<div class="bbcode_quote_header">%s</div>'.
+                   '<div class="bbcode_quote_body">%s</div>',
      b          => '<span style="font-weight: bold">%s</span>', 
      u          => '<span style="text-decoration: underline;">%s</span>',
      i          => '<span style="font-style: italic">%s</span>', 
      color      => '<span style="color: %s">%s</span>',
      size       => '<span style="font-size: %spx">%s</span>',
-     quote      => '<div class="bbcode_quote_header">%s</div>'.
-                   '<div class="bbcode_quote_body">%s</div>',
-     code       => '<div class="bbcode_code_header">Code:</div>'.
-                   '<div class="bbcode_code_body">%s</div>',
      url        => '<a href="%s">%s</a>',
      email      => '<a href="mailto:%s">%s</a>',
      img        => '<img src="%s" />',
@@ -125,13 +130,13 @@ sub _init {
    );
 
    my %match = (
+     code  => qr|\[code\](.+?)\[/code\]|iso,
+     quote => qr|\[quote(="([^"]+)")?\](.+?)\[/quote\]|iso,
      b     => qr|\[b\](.+?)\[/b\]|iso,
      u     => qr|\[u\](.+?)\[/u\]|iso,
      i     => qr|\[i\](.+?)\[/i\]|iso,
      color => qr|\[color=(.+?)\](.+?)\[/color\]|iso,
      size  => qr|\[size=(.+?)\](.+?)\[/size\]|iso,
-     quote => qr|\[quote[=]?["]?(.+?)?["]?\](.+?)\[/quote\]|iso,
-     code  => qr|\[code\](.+?)\[/code\]|iso,
      url   => qr|\[url[=]?([^\]]+?)?\](.+?)\[/url\]|iso,
      email => qr|\[email\](.+?)\[/email\]|iso,
      img   => qr|\[img\](.+?)\[/img\]|iso,
@@ -139,13 +144,13 @@ sub _init {
    );
 
    my %substitute = (
+     code  => 'sprintf($html_tags{code},&_code($1))',
+     quote => 'sprintf($html_tags{quote},($2)?"$2 wrote:":"Quote:", $3)',
      b     => 'sprintf($html_tags{b},$1)',
      u     => 'sprintf($html_tags{u},$1)',
      i     => 'sprintf($html_tags{i},$1)',
      color => 'sprintf($html_tags{color}, $1, $2)',
      size  => 'sprintf($html_tags{size}, $1, $2)',
-     quote => 'sprintf($html_tags{quote},($1)?"$1 wrote:":"Quote:", $2)',
-     code  => 'sprintf($html_tags{code},&_code($1))',
      url   => 'sprintf($html_tags{url},($1)?$1:$2, $2)',
      email => 'sprintf($html_tags{email}, $1, $1)',
      img   => 'sprintf($html_tags{img}, $1)',
@@ -175,10 +180,20 @@ sub parse {
    my %html_tags  = %{ $self->{options}->{html_tags} };
   
    map { 
-          $self->{html} =~ s|$match{$_}|$substitute{$_}|eegis;
-       } @{ $self->{options}->{allowed_tags} };
+         if(_is_allowed($self, $_)) {
+          $self->{html} =~ s|$match{$_}|$substitute{$_}|eegis
+         }
+       } @bbcode_tags;
 
    return $self->{html};
+}
+
+sub _is_allowed {
+   my ($self, $check) = @_;
+   map { 
+         return 1 if ($_ eq $check); 
+       } @{$self->{options}->{allowed_tags}};
+   return 0; 
 }
 
 sub _code {
@@ -186,6 +201,8 @@ sub _code {
    $code =~ s|^\n||;
    $code =~ s|<|\&lt;|g;
    $code =~ s|>|\&gt;|g;
+   $code =~ s|\[|\&#091;|g;
+   $code =~ s|\]|\&#093;|g;
    $code =~ s| |\&nbsp;|g;
    $code =~ s|\n|<br />|g;
    return $code;
