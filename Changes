@@ -1,3 +1,9 @@
+1.00
+  - This module has basically been built from scratch again, for a lot
+    of problems were spotted by various users (THANKS ALL!). The module now
+    uses a 'poor man's parser' that will fix nesting problems. Also the
+    linebreak options will ignore [code]-blocks.
+
 0.04
   - 'no_html' option, for "stripping" HTML input
   - 'linebreaks' option, for inserting '<br />' tags
