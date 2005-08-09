@@ -1,3 +1,13 @@
+1.02
+  - Yet more nesting problems fixed (Ticket 12036,
+    "Incorrect work with limited set of tags").
+    Thanks to Igor Lobanov for reporting and Michele Beltrame for helping out.
+  - Added (empty) attribute 'alt' to img-tags, to make it more W3C-valid
+    Thanks to Michele Beltrame for reporting and patching.
+  - Added case insensative tag matching
+    Thanks to Denny Daugherty for reporting and patching. 
+  - Minor code changes (killing unwanted whitespaces).
+
 1.01
   - Nesting problem patched by monk physi. Thanks!
   - img nesting problem fixed. Linked images should be ok now.

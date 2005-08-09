@@ -101,7 +101,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -131,7 +131,7 @@ sub _init {
      size       => '<span style="font-size: %spx">%s</span>',
      url        => '<a href="%s">%s</a>',
      email      => '<a href="mailto:%s">%s</a>',
-     img        => '<img src="%s" />',
+     img        => '<img src="%s" alt="" />',
      ul         => '<ul>%s</ul>',
      ol_number  => '<ol>%s</ol>',
      ol_alpha   => '<ol style="list-style-type: lower-alpha;">%s</ol>',
@@ -193,13 +193,14 @@ sub parse {
          last main if(!$input);	# We're at the end now, stop parsing!
       }
    }
-   $self->{html} = join(' ', @{$self->{_stack}});
+   $self->{html} = join('', @{$self->{_stack}});
    return $self->{html};
 }
 
 sub _open_tag {
    my ($self, $open) = @_;
    my ($tag) = $open =~ m/\[([^=\]]+).*?\]/s;	# Don't do this! ARGH!
+   $tag = lc $tag;
    if(_dont_nest($self, $tag) && $tag eq 'img') {
       $self->{_skip_nest} = $tag;
    }
@@ -261,6 +262,9 @@ sub _end_tag {
                push @{$self->{_stack}}, (_is_allowed($self, $tag))
 	       				? _do_BB($self, @buf)
 					: reverse @buf;
+   	       # Clear the _skip_nest?
+               $self->{_skip_nest} = '' if(defined $self->{_skip_nest} &&
+                                           $tag eq $self->{_skip_nest});
 	       last;
             }
          }
@@ -306,11 +310,8 @@ sub _do_BB {
    } else {
       $html = sprintf($self->{options}->{html_tags}->{$tag}, $content);
    }
-   # Clear the _skip_nest?
-   $self->{_skip_nest} = '' if(defined $self->{_skip_nest} &&
-                               $tag eq $self->{_skip_nest});
    # Return ...
-   return split(' ', $html);
+   return $html;
 }
 
 sub _is_allowed {

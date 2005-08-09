@@ -2,6 +2,7 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/HTML-BBCode.t
+t/basic.t
+t/bug12036.t
 lib/HTML/BBCode.pm
 META.yml                                 Module meta-data (added by MakeMaker)
