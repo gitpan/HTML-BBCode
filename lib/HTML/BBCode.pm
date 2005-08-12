@@ -91,7 +91,7 @@ M. Blom, E<lt>b10m@perlmonk.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004 by M. Blom
+Copyright (C) 2004,2005 by M. Blom
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -101,7 +101,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -182,8 +182,14 @@ sub parse {
          $input = $';
       }
 
-      # None BBCode content
+      # None BBCode content till next tag
       elsif($input =~ /^([^\[]+)/s) {
+         _content($self, $1);
+         $input = $';
+      }
+
+      # BUG #14138 unmatched bracket, content till end of input
+      elsif($input =~ /^(.+)$/s) {
          _content($self, $1);
          $input = $';
       }

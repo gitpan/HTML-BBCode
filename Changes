@@ -1,3 +1,7 @@
+1.03
+  - Unmatched bracket problem fixed (Ticket 14138, "HTML::BBCode bug")
+    Thanks to Josh Schoof for reporting
+
 1.02
   - Yet more nesting problems fixed (Ticket 12036,
     "Incorrect work with limited set of tags").

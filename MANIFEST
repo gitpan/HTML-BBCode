@@ -4,5 +4,6 @@ MANIFEST
 README
 t/basic.t
 t/bug12036.t
+t/bug14138.t
 lib/HTML/BBCode.pm
 META.yml                                 Module meta-data (added by MakeMaker)
