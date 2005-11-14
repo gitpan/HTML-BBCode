@@ -1,3 +1,10 @@
+1.04
+  - Really fixed Denny Daugherty's case insensative matching's problem (my bad)
+  - Bug reported by 'Dodger' fixed (no barfing on empty input)
+  - Bugs reported (patched) by YorHel fixed:
+       * Tags no longer substituted with HTML in [code] blocks
+       * No more <br /> in <li></li> (unless needed)
+
 1.03
   - Unmatched bracket problem fixed (Ticket 14138, "HTML::BBCode bug")
     Thanks to Josh Schoof for reporting

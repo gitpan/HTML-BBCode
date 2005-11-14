@@ -101,7 +101,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -151,6 +151,8 @@ sub _init {
 # Parse the input!
 sub parse {
    my ($self, $bbcode) = @_;
+   return if(!defined $bbcode);
+
    $self->{_stack} = ();
    $self->{_in_code_block} = 0;
    $self->{_skip_nest} = '';
@@ -167,8 +169,9 @@ sub parse {
    while(1) {
       # End tag
       if($input =~ /^(\[\/[^\]]+\])/s) {
-         my $end = $1;
-	 if($self->{_skip_nest} ne '' && $end ne "[/$self->{_skip_nest}]") {
+         my $end = lc $1;
+	 if(($self->{_skip_nest} ne '' && $end ne "[/$self->{_skip_nest}]") ||
+	    ($self->{_in_code_block} && $end ne "[/code]")) {
             _content($self, $end);
 	 } else {
             _end_tag($self, $end);
@@ -178,7 +181,11 @@ sub parse {
 
       # Opening tag
       elsif($input =~ /^(\[[^\]]+\])/s ) {
-         _open_tag($self, $1);
+         if($self->{_in_code_block}) {
+           _content($self, $1);
+         } else {
+           _open_tag($self, $1);
+         }
          $input = $';
       }
 
@@ -205,7 +212,7 @@ sub parse {
 
 sub _open_tag {
    my ($self, $open) = @_;
-   my ($tag) = $open =~ m/\[([^=\]]+).*?\]/s;	# Don't do this! ARGH!
+   my ($tag, $rest) = $open =~ m/\[([^=\]]+)(.*)?\]/s;	# Don't do this! ARGH!
    $tag = lc $tag;
    if(_dont_nest($self, $tag) && $tag eq 'img') {
       $self->{_skip_nest} = $tag;
@@ -215,7 +222,7 @@ sub _open_tag {
       $self->{_nest_count_stack}++;
    }
    $self->{_in_code_block}++ if($tag eq 'code');
-   push @{$self->{_stack}}, $open;
+   push @{$self->{_stack}}, '['.$tag.$rest.']';
 }
 
 sub _content {
@@ -224,6 +231,7 @@ sub _content {
       $content =~ s|<|&lt;|gs;
       $content =~ s|>|&gt;|gs;
    }
+   $content =~ s|\r*||gs;
    $content =~ s|\n|<br />\n|gs if($self->{options}->{linebreaks} &&
    			           $self->{_in_code_block} == 0);
    push @{$self->{_stack}}, $content;
@@ -350,7 +358,9 @@ sub _code {
 
 sub _list {
    my ($self, $attr, $content) = @_;
-   $content =~ s|\[\*\]([^(\[]+)|<li>$1</li>|gs;
+   $content =~ s|^<br />[\s\r\n]*|\n|s;
+   $content =~ s|\[\*\]([^(\[]+)|_list_removelastbr($1)|egs;
+   $content =~ s|<br />$|\n|s;
    if($attr) {
       return sprintf($self->{options}->{html_tags}->{ol_number}, $content)
          if($attr =~ /^\d/);
@@ -359,6 +369,14 @@ sub _list {
    } else {
       return sprintf($self->{options}->{html_tags}->{ul}, $content);
    }
+}
+
+sub _list_removelastbr {
+   my $content = shift;
+   $content =~ s|<br />[\s\r\n]*$||;
+   $content =~ s|^\s*||;
+   $content =~ s|\s*$||;
+   return "<li>$content</li>\n";
 }
 
 sub _croak {

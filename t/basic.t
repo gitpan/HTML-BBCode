@@ -25,9 +25,9 @@ is($bbc->parse('[url=http://www.b10m.net/]lame site[/url]'), '<a href="http://ww
 is($bbc->parse('[email]foo@bar.com[/email]'), '<a href="mailto:foo@bar.com">foo@bar.com</a>', 'mailto-links');
 is($bbc->parse('[img]foo.png[/img]'), '<img src="foo.png" alt="" />', 'image');
 is($bbc->parse('[url=http://b10m.net][img]/b10m/logo.png.noway[/img][/url]'), '<a href="http://b10m.net"><img src="/b10m/logo.png.noway" alt="" /></a>', 'linked image');
-is($bbc->parse('[list][*]foo[*]bar[/list]'), '<ul><li> foo </li><li> bar</li></ul>', 'unordered list');
-is($bbc->parse('[list=1][*]foo[*]bar[/list]'), '<ol><li> foo </li><li> bar</li></ol>', 'ordered list');
-is($bbc->parse('[list=a][*]foo[*]bar[/list]'), '<ol style="list-style-type: lower-alpha;"><li> foo </li><li> bar</li></ol>', 'ordered list (alpha style)');
+is($bbc->parse('[list][*]foo[*]bar[/list]'), "<ul><li>foo</li>\n<li>bar</li>\n</ul>", 'unordered list');
+is($bbc->parse('[list=1][*]foo[*]bar[/list]'), "<ol><li>foo</li>\n<li>bar</li>\n</ol>", 'ordered list');
+is($bbc->parse('[list=a][*]foo[*]bar[/list]'), "<ol style=\"list-style-type: lower-alpha;\"><li>foo</li>\n<li>bar</li>\n</ol>", 'ordered list (alpha style)');
 
 # Mix them and do 'em wrong!
 is($bbc->parse('[b]bold, [i]bold and italic[/i][/b][/b]'), '<span style="font-weight: bold">bold,  <span style="font-style: italic">bold and italic</span></span>[/b]', 'mixed, and "wrong"');
