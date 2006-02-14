@@ -1,3 +1,8 @@
+1.05
+  - Fixed XSS bug (Tiket 17633, "HTML::BBCode XSS Vulnerabilities")
+    Thanks to Alex for reporting.
+  - POD slightly altered
+
 1.04
   - Really fixed Denny Daugherty's case insensative matching's problem (my bad)
   - Bug reported by 'Dodger' fixed (no barfing on empty input)

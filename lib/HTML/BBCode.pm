@@ -32,6 +32,7 @@ The following methods can be used
       allowed_tags => [ @bbcode_tags ],
       html_tags    => \%html_tags,
       no_html      => 1,
+      no_jslink    => 1,
       linebreaks   => 1,
    });
 
@@ -59,7 +60,13 @@ their CSS equivalents).
 
 Disabled by default.
 
-When true, HTML tags will be converted from '<br />' to '&lt;br /&gt'
+When true, HTML tags will be converted from '<br />' to '&lt;br /&gt;'
+
+=item no_jslink
+
+Enabled by default.
+
+When true, links like C<javascript:foo(bar)> will be disabled.
 
 =item linebreaks
 
@@ -78,20 +85,27 @@ a single scalar string.
 
 =head1 SEE ALSO
 
-http://www.b10m.net/cgi-bin/HTML-BBCode.cgi http://www.phpbb.com/phpBB/faq.php?mode=bbcode
+=over 4
+
+=item * L<http://www.phpbb.com/phpBB/faq.php?mode=bbcode>
+
+=item * L<http://menno.b10m.net/perl/>
+
+=item * L<HTML::BBReverse>, L<BBCode::Parser>
+
+=back
 
 =head1 BUGS
 
-C<Bugs? Impossible!>. This module is still experimental. Please
-notify the author when you find bugs.
+C<Bugs? Impossible!>. Please report bugs to L<http://rt.cpan.org/Ticket/Create.html?Queue=HTML-BBCode>.
 
 =head1 AUTHOR
 
-M. Blom, E<lt>b10m@perlmonk.orgE<gt>
+M. Blom, E<lt>blom@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004,2005 by M. Blom
+Copyright (C) 2004,2005,2006 by M. Blom
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -101,7 +115,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -141,6 +155,7 @@ sub _init {
 		  allowed_tags=> \@bbcode_tags,
 		  html_tags    => \%html_tags,
 		  no_html      => 0,
+		  no_jslink    => 1,
 		  linebreaks   => 0,
  		  %{ $args },
 		);
@@ -318,10 +333,13 @@ sub _do_BB {
    } elsif($tag eq 'list') {
      $html = _list($self, $attr, $content);
    } elsif(($tag eq 'email' || $tag eq 'url') && !$attr) {
+      $content =~ s|javascript:||g if($self->{options}->{no_jslink});
       $html = sprintf($self->{options}->{html_tags}->{$tag}, $content,$content);
    } elsif ($attr) {
+      $attr =~ s|javascript:||g if($self->{options}->{no_jslink});
       $html = sprintf($self->{options}->{html_tags}->{$tag}, $attr, $content);
    } else {
+      $content =~ s|javascript:||g if($self->{options}->{no_jslink});
       $html = sprintf($self->{options}->{html_tags}->{$tag}, $content);
    }
    # Return ...
