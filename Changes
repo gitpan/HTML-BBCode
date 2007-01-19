@@ -1,3 +1,7 @@
+1.06
+  - Fixed XSS bug (Ticket 24448)
+    Thanks to DMUEY for reporting
+
 1.05
   - Fixed XSS bug (Tiket 17633, "HTML::BBCode XSS Vulnerabilities")
     Thanks to Alex for reporting.

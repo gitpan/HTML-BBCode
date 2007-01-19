@@ -115,7 +115,7 @@ it under the same terms as Perl itself.
 use strict;
 use warnings;
 
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -319,6 +319,10 @@ sub _do_BB {
    if($open =~ /\[([^=\]]+)=?([^\]]+)?]/) {
       $tag  = $1;
       $attr = $2;
+      if($attr && $self->{options}->{no_html}) {
+         $attr =~ s|<|&lt;|gs;
+         $attr =~ s|>|&gt;|gs;
+      }
    }
 
    # Kludgy way to handle specific BBCodes ... 
