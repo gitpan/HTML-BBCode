@@ -1,10 +1,15 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         HTML-BBCode
-version:      1.06
-version_from: lib/HTML/BBCode.pm
-installdirs:  site
-requires:
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+--- #YAML:1.0
+name:                HTML-BBCode
+version:             2.00
+abstract:            Perl extension for converting BBcode to HTML.
+license:             ~
+generated_by:        ExtUtils::MakeMaker version 6.36
+distribution_type:   module
+requires:     
+    HTML::StripScripts:            1.04
+    HTML::StripScripts::Parser:    0
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2
+author:
+    - M. Blom <blom@cpan.org>

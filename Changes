@@ -1,3 +1,21 @@
+2.00
+    === API CHANGE ===
+    The options html_tags, no_html and no_jslink are  no longer supported 
+    by the new method. It _will_ break your code. The reason for this is the 
+    implementation of scanning the output with HTML::StripScripts::Parser 
+    (and the reason for that are the piling XSS-related bug reports ;-)
+    ==================
+
+  - Bumped up to version 2.00 due to the API CHANGE.
+  - html_tags has been removed
+  - no_html has been removed
+  - no_jslink has been removed
+  - HTML::StripScripts::Parser has been implemented for security reasons
+  - Fixed XSS bug (Ticket 28830)
+    Thanks to Jürgen Peters ('TAULMARIL') for reporting the bug and 
+    helping me fix it (as well as Clinton Gormley ('DRTECH') for offering 
+    help with his module!).
+
 1.06
   - Fixed XSS bug (Ticket 24448)
     Thanks to DMUEY for reporting

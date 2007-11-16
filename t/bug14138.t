@@ -14,7 +14,7 @@ my $text = "server has high pings constantly (450ish - 2k) and restarts/crashes 
 is($bbc->parse($text), "server has high pings constantly (450ish - 2k) and restarts/crashes are starting to become an everyday thing ;[ ", "bug text");
 
 $text = "server has [b]high[/b] pings constantly (450ish - 2k) and restarts/crashes are starting to become an everyday thing ;[ ";
-is($bbc->parse($text), 'server has <span style="font-weight: bold">high</span> pings constantly (450ish - 2k) and restarts/crashes are starting to become an everyday thing ;[ ', "bug text with BBCode added");
+is($bbc->parse($text), 'server has <span style="font-weight:bold">high</span> pings constantly (450ish - 2k) and restarts/crashes are starting to become an everyday thing ;[ ', "bug text with BBCode added");
 
 
 $text = "server ;] has high pings constantly (450ish - 2k) ;[ and restarts/crashes are starting to become an everyday thing ;[ ";

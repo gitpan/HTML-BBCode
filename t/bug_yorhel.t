@@ -13,7 +13,7 @@ my $bbc = new HTML::BBCode({
 isa_ok($bbc, 'HTML::BBCode', 'default');
 
 my $text="[code]\n[u]some code[/u]\n[/code]";
-my $result='<div class="bbcode_code_header">Code:</div><div class="bbcode_code_body"><br />&nbsp;&#091;u&#093;&nbsp;some&nbsp;code&nbsp;&#091;/u&#093;&nbsp;<br /></div>';
+my $result='<div class="bbcode_code_header">Code:</div><div class="bbcode_code_body"><br />&nbsp;[u]&nbsp;some&nbsp;code&nbsp;[/u]&nbsp;<br /></div>';
 
 is($bbc->parse($text), $result, "Tags in code");
 
