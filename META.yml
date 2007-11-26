@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                HTML-BBCode
-version:             2.00
+version:             2.01
 abstract:            Perl extension for converting BBcode to HTML.
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.36

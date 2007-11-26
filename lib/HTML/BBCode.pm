@@ -116,7 +116,7 @@ use strict;
 use warnings;
 use HTML::BBCode::StripScripts;
 
-our $VERSION = '2.00';
+our $VERSION = '2.01';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -266,7 +266,6 @@ sub parse {
       }
    }
    $self->{html} = join('', @{$self->{_stack}});
-print $self->{html},"\n\n\n";
    return $self->{options}->{stripscripts} ? $self->_stripscripts() : $self->{html};
 }
 

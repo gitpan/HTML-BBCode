@@ -1,3 +1,6 @@
+2.01
+  - Removed debugging line
+
 2.00
     === API CHANGE ===
     The options html_tags, no_html and no_jslink are  no longer supported 

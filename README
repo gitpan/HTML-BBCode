@@ -12,7 +12,7 @@ To install this module type the following:
 
 DEPENDENCIES
 
-  none
+  HTML::StripScripts::Parser
 
 COPYRIGHT AND LICENCE
 
