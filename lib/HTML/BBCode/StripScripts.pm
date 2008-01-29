@@ -1,9 +1,10 @@
 package HTML::BBCode::StripScripts;
 
 use strict;
+use URI;
 use base qw(HTML::StripScripts::Parser);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my %bbattrib;
 my %bbstyle;
@@ -30,5 +31,32 @@ sub init_style_whitelist {
    }     
    return \%bbstyle;
 }       
+
+sub validate_href_attribute {
+   my ($self, $text) = @_;
+
+   # Encode URLs if needed (as per bug 31927)
+   my $uri = URI->new($text);
+   my $query = $uri->query;
+   if($query) {
+      if($query =~ m/[^A-Za-z0-9\-_.!~*'()]/ && $query !~ m/%(?![A-Fa-f0-9])/) {
+         $query =~ s/([^A-Za-z0-9\-_.!~*'()\%])/sprintf("%%%02X", ord($1))/ge;
+         $uri->query($query);
+      }
+   }
+
+   $text = $uri->as_string;
+
+   return $1
+       if $self->{_hssCfg}{AllowRelURL}
+       and $text =~ /^((?:[\w\-.!~*|;\/?=+\$,%#]|&amp;){0,100})$/;
+
+   $text =~ m< ^ ( https? :// [\w\-\.]{1,100} (?:\:\d{1,5})?
+                   (?: / (?:[\w\-.!~*|;/?=+\$,%#]|&amp;){0,100} )?
+                 )
+               $
+             >x ? $1 : undef;
+}
+
 
 1;

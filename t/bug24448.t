@@ -13,4 +13,4 @@ my $text = "[color=<xss>]<xss>[/color]";
 is($bbc->parse($text), '<span>&lt;xss&gt;</span>');
 
 $text = "[url=<xss>]http:<xss>[/url]";
-is($bbc->parse($text), "&lt;a href=&quot;&lt;xss&gt;&quot;&gt;http:&lt;xss&gt;&lt;/a&gt;");
+is($bbc->parse($text), '<a href="xss">http:&lt;xss&gt;</a>');

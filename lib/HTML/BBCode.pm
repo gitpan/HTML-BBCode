@@ -105,7 +105,7 @@ M. Blom, E<lt>blom@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004,2005,2006,2007 by M. Blom
+Copyright (C) 2004-2008 by M. Blom
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -116,7 +116,7 @@ use strict;
 use warnings;
 use HTML::BBCode::StripScripts;
 
-our $VERSION = '2.01';
+our $VERSION = '2.02';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {

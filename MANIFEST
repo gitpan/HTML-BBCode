@@ -9,6 +9,7 @@ t/bug14138.t
 t/bug17633.t
 t/bug24448.t
 t/bug28830.t
+t/bug31927.t
 t/bug_denny.t
 t/bug_dodger.t
 t/bug_yorhel.t
