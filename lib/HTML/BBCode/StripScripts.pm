@@ -4,7 +4,7 @@ use strict;
 use URI;
 use base qw(HTML::StripScripts::Parser);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my %bbattrib;
 my %bbstyle;
@@ -51,8 +51,8 @@ sub validate_href_attribute {
        if $self->{_hssCfg}{AllowRelURL}
        and $text =~ /^((?:[\w\-.!~*|;\/?=+\$,%#]|&amp;){0,100})$/;
 
-   $text =~ m< ^ ( https? :// [\w\-\.]{1,100} (?:\:\d{1,5})?
-                   (?: / (?:[\w\-.!~*|;/?=+\$,%#]|&amp;){0,100} )?
+   $text =~ m< ^ ( (f|ht)tps? :// [\w\-\.]{1,100} (?:\:\d{1,5})?
+                   (?: / (?:[\w\-.!~*|;/?=+\$,%#]|&amp;){0,2000} )?
                  )
                $
              >x ? $1 : undef;
