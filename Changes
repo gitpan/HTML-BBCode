@@ -1,9 +1,15 @@
+2.04
+  - Fixed bug (Ticket 33542)
+    Query parameters should be handled ok now.
+    Thanks to 'gnudist' once again!
+
 2.03
   - Fixed bug (Ticket 33495)
     FTP links aren't breaking anything now.
   - Fixed bug (Ticket 33496)
     URLs may take up to 2000 characters now, instead of the previous limit 
     of 500. "2000 should be enough for everybody" ;-)
+    Thanks to 'gnudist' for reporting!
 
 2.02
   - Fixed bug (Ticket 31927)

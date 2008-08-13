@@ -12,6 +12,7 @@ t/bug28830.t
 t/bug31927.t
 t/bug33495.t
 t/bug33496.t
+t/bug33542.t
 t/bug_denny.t
 t/bug_dodger.t
 t/bug_yorhel.t

@@ -116,7 +116,7 @@ use strict;
 use warnings;
 use HTML::BBCode::StripScripts;
 
-our $VERSION = '2.03';
+our $VERSION = '2.04';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {

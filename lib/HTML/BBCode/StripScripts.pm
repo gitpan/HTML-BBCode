@@ -4,7 +4,7 @@ use strict;
 use URI;
 use base qw(HTML::StripScripts::Parser);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my %bbattrib;
 my %bbstyle;
@@ -40,7 +40,7 @@ sub validate_href_attribute {
    my $query = $uri->query;
    if($query) {
       if($query =~ m/[^A-Za-z0-9\-_.!~*'()]/ && $query !~ m/%(?![A-Fa-f0-9])/) {
-         $query =~ s/([^A-Za-z0-9\-_.!~*'()\%])/sprintf("%%%02X", ord($1))/ge;
+         $query =~ s/([^;&=A-Za-z0-9\-_.!~*'()\%])/sprintf("%%%02X", ord($1))/ge;
          $uri->query($query);
       }
    }
