@@ -1,3 +1,7 @@
+2.06
+  - Fixed bug (Ticket 43698)
+    Thanks to 'ESSKAR'
+
 2.04
   - Fixed bug (Ticket 33542)
     Query parameters should be handled ok now.

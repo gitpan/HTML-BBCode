@@ -22,6 +22,10 @@ HTML::BBCode - Perl extension for converting BBcode to HTML.
 C<HTML::BBCode> converts BBCode -as used on the phpBB bulletin
 boards- to its HTML equivalent.
 
+Please note that, although this was the first BBCode module, it's by
+far not the best nor fastest. It's also not heavilly maintained, so
+you might want to look at L<BBCode::Parser> and L<Parse::BBCode>.
+
 =head2 METHODS
 
 The following methods can be used
@@ -101,11 +105,11 @@ C<Bugs? Impossible!>. Please report bugs to L<http://rt.cpan.org/Ticket/Create.h
 
 =head1 AUTHOR
 
-M. Blom, E<lt>blom@cpan.orgE<gt>
+Menno Blom, E<lt>blom@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2008 by M. Blom
+Copyright (C) 2004-2009 by Menno Blom
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -116,7 +120,7 @@ use strict;
 use warnings;
 use HTML::BBCode::StripScripts;
 
-our $VERSION = '2.04';
+our $VERSION = '2.06';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -212,7 +216,7 @@ sub parse {
    my ($self, $bbcode) = @_;
    return if(!defined $bbcode);
 
-   $self->{_stack} = ();
+   $self->{_stack} = [];
    $self->{_in_code_block} = 0;
    $self->{_skip_nest} = '';
    $self->{_nest_count} = 0;
