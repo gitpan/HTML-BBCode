@@ -120,7 +120,7 @@ use strict;
 use warnings;
 use HTML::BBCode::StripScripts;
 
-our $VERSION = '2.06';
+our $VERSION = '2.07';
 our @bbcode_tags = qw(code quote b u i color size list url email img);
 
 sub new {
@@ -157,12 +157,12 @@ sub _init {
    );
 
    my %options = (
-		  allowed_tags=> \@bbcode_tags,
-		  html_tags    => \%html_tags,
-		  stripscripts => 1,
-		  linebreaks   => 0,
- 		  %{ $args },
-		);
+          allowed_tags=> \@bbcode_tags,
+          html_tags    => \%html_tags,
+          stripscripts => 1,
+          linebreaks   => 0,
+           %{ $args },
+        );
    $self->{options} = \%options;
 
    $self->{'hss'} = HTML::BBCode::StripScripts->new({
@@ -233,12 +233,12 @@ sub parse {
       # End tag
       if($input =~ /^(\[\/[^\]]+\])/s) {
          my $end = lc $1;
-	 if(($self->{_skip_nest} ne '' && $end ne "[/$self->{_skip_nest}]") ||
-	    ($self->{_in_code_block} && $end ne "[/code]")) {
+     if(($self->{_skip_nest} ne '' && $end ne "[/$self->{_skip_nest}]") ||
+        ($self->{_in_code_block} && $end ne "[/code]")) {
             _content($self, $end);
-	 } else {
+     } else {
             _end_tag($self, $end);
-	 }
+     }
          $input = $';
       }
 
@@ -266,7 +266,7 @@ sub parse {
 
       # Now what?
       else {
-         last main if(!$input);	# We're at the end now, stop parsing!
+         last main if(!$input);    # We're at the end now, stop parsing!
       }
    }
    $self->{html} = join('', @{$self->{_stack}});
@@ -275,7 +275,7 @@ sub parse {
 
 sub _open_tag {
    my ($self, $open) = @_;
-   my ($tag, $rest) = $open =~ m/\[([^=\]]+)(.*)?\]/s;	# Don't do this! ARGH!
+   my ($tag, $rest) = $open =~ m/\[([^=\]]+)(.*)?\]/s;    # Don't do this! ARGH!
    $tag = lc $tag;
    if(_dont_nest($self, $tag) && $tag eq 'img') {
       $self->{_skip_nest} = $tag;
@@ -292,7 +292,7 @@ sub _content {
    my ($self, $content) = @_;
    $content =~ s|\r*||gs;
    $content =~ s|\n|<br />\n|gs if($self->{options}->{linebreaks} &&
-   			           $self->{_in_code_block} == 0);
+                          $self->{_in_code_block} == 0);
    push @{$self->{_stack}}, $content;
 }
 
@@ -308,37 +308,37 @@ sub _end_tag {
    }
 
    $self->{_in_code_block} = 0 if($end eq '[/code]');
-	 
+     
    # Loop through the stack
    while(1) {
          my $item = pop(@{$self->{_stack}});
          push @buf, $item;
 
          if(!defined $item) {
-	    map { push @{$self->{_stack}}, $_ if($_) } reverse @buf;
-	    last;
+        map { push @{$self->{_stack}}, $_ if($_) } reverse @buf;
+        last;
          }
 
-	 
+     
          if("[$self->{_skip_nest}]" eq "$item") {
-	       $self->{_nest_count_stack}--;
-	       next if($self->{_nest_count_stack} > 0);
-	 }
+           $self->{_nest_count_stack}--;
+           next if($self->{_nest_count_stack} > 0);
+     }
 
          $self->{_nest_count}--
             if("[/$self->{_skip_nest}]" eq $end && $self->{_nest_count} > 0) ;
 
 
-	 if($item =~ /\[([^=\]]+).*\]/s) {
+     if($item =~ /\[([^=\]]+).*\]/s) {
             $tag = $1;
-	    if ($tag && $end eq "[/$tag]") {
+        if ($tag && $end eq "[/$tag]") {
                push @{$self->{_stack}}, (_is_allowed($self, $tag))
-	       				? _do_BB($self, @buf)
-					: reverse @buf;
-   	       # Clear the _skip_nest?
+                           ? _do_BB($self, @buf)
+                    : reverse @buf;
+              # Clear the _skip_nest?
                $self->{_skip_nest} = '' if(defined $self->{_skip_nest} &&
                                            $tag eq $self->{_skip_nest});
-	       last;
+           last;
             }
          }
    }
@@ -370,7 +370,7 @@ sub _do_BB {
       $html = sprintf($self->{options}->{html_tags}->{quote},
                         ($attr) ? "$attr wrote:"
                               : "Quote:",
-                        $content  
+                        $content
                      );
    } elsif($tag eq 'code') {
      $html = sprintf($self->{options}->{html_tags}->{code}, _code($content));
@@ -398,7 +398,7 @@ sub _is_allowed {
 sub _dont_nest {
    my ($self, $check) = @_;
    map {
-   	 return 1 if($_ eq $check);
+        return 1 if($_ eq $check);
        } @{$self->{_dont_nest}};
    return 0;
 }
@@ -418,7 +418,7 @@ sub _code {
 sub _list {
    my ($self, $attr, $content) = @_;
    $content =~ s|^<br />[\s\r\n]*|\n|s;
-   $content =~ s|\[\*\]([^(\[]+)|_list_removelastbr($1)|egs;
+   $content =~ s|\[\*\]([^\[]+)|_list_removelastbr($1)|egs;
    $content =~ s|<br />$|\n|s;
    if($attr) {
       return sprintf($self->{options}->{html_tags}->{ol_number}, $content)
